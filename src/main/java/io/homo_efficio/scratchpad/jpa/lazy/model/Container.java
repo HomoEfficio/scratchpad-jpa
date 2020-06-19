@@ -28,7 +28,11 @@ public class Container {
 //    @JoinColumn(name = "container_id")
 //    private List<Containee1> containee1s;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
-//    @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    private Containee2 containee2;
+//    @OneToOne(cascade = CascadeType.PERSIST)
+////    @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+//    private Containee2 containee2;
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @LazyCollection(LazyCollectionOption.TRUE)
+    private Set<Long> resources;
 }

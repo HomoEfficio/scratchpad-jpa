@@ -18,14 +18,16 @@ public class ContainerOut {
     private final Long id;
     private final String name;
 //    private final List<Containee1> containee1s;
-    private final Containee2 containee2;
+//    private final Containee2 containee2;
+    private final Set<Long> resources;
 
     public static ContainerOut from(Container container) {
         return new ContainerOut(
                 container.getId(),
                 container.getName(),
 //                container.getContainee1s(),
-                container.getContainee2()
+//                container.getContainee2()
+                container.getResources()
         );
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author homo.efficio@gmail.com
@@ -41,6 +42,7 @@ public class ContainerService {
         Container container = optContainer.orElseThrow(() -> new RuntimeException("Not found " + id));
 //        List<Containee1> containee1s = container.getContainee1s();
 //        Hibernate.initialize(containee1s);
+        Set<Long> resources = container.getResources();
         ContainerOut containerOut = ContainerOut.from(container);
         return containerOut;
     }
