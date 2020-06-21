@@ -18,7 +18,7 @@ public class TraitTargetController {
     private final TraitTargetService traitTargetService;
 
     @PostMapping
-    public ResponseEntity<TraitTarget> create(@RequestBody TraitTarget traitTarget) {
+    public ResponseEntity<TraitTargetOut> create(@RequestBody TraitTarget traitTarget) {
         return ResponseEntity.ok(traitTargetService.save(traitTarget));
     }
 

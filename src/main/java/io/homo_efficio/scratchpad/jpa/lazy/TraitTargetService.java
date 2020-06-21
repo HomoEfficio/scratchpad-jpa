@@ -1,13 +1,18 @@
 package io.homo_efficio.scratchpad.jpa.lazy;
 
+import io.homo_efficio.scratchpad.jpa.lazy.model.IdType;
 import io.homo_efficio.scratchpad.jpa.lazy.model.TraitTarget;
 import io.homo_efficio.scratchpad.jpa.lazy.model.TraitTargetOut;
+import io.homo_efficio.scratchpad.jpa.lazy.model.TraitTargetSourceIdType;
+import io.homo_efficio.scratchpad.jpa.lazy.repository.IdTypeRepository;
 import io.homo_efficio.scratchpad.jpa.lazy.repository.TraitTargetRepository;
+import io.homo_efficio.scratchpad.jpa.lazy.repository.TraitTargetSourceIdTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author homo.efficio@gmail.com
@@ -18,10 +23,40 @@ import java.util.Optional;
 public class TraitTargetService {
 
     private final TraitTargetRepository traitTargetRepository;
+    private final IdTypeRepository idTypeRepository;
+    private final TraitTargetSourceIdTypeRepository traitTargetSourceIdTypeRepository;
 
     @Transactional
-    public TraitTarget save(TraitTarget traitTarget) {
-        return traitTargetRepository.save(traitTarget);
+    public TraitTargetOut save(TraitTarget traitTarget) {
+        TraitTarget dbTraitTarget = traitTargetRepository.save(traitTarget);
+        setTraitTargetSourceIdTypes(traitTarget, dbTraitTarget);
+        return TraitTargetOut.from(dbTraitTarget);
+    }
+
+    private void setTraitTargetSourceIdTypes(TraitTarget traitTarget, TraitTarget dbTraitTarget) {
+        List<TraitTargetSourceIdType> selectedSourceIdTypes = traitTarget.getSourceIdTypes();
+        if (selectedSourceIdTypes == null || selectedSourceIdTypes.isEmpty()) {
+            throw new IllegalArgumentException("TraitTarget 에는 sourceIdTypes가 있어야 합니다.");
+        }
+
+        dbTraitTarget.setSourceIdTypes(selectedSourceIdTypes);
+    }
+
+    private List<TraitTargetSourceIdType> getTraitTargetSourceIdTypes(TraitTarget traitTarget,
+                                                                      List<TraitTargetSourceIdType> selectTraitTargetSourceIdTypesIn,
+                                                                      TraitTarget dbTraitTarget) {
+        List<TraitTargetSourceIdType> selectedTraitTargetSourceIdTypes = new ArrayList<>();
+        for (TraitTargetSourceIdType selectedTraitTargetSourceIdType : selectTraitTargetSourceIdTypesIn) {
+
+            IdType idType = idTypeRepository.findByIdType(selectedTraitTargetSourceIdType.getIdType().getIdType())
+                    .orElseThrow(() -> new IllegalArgumentException(selectedTraitTargetSourceIdType.getIdType() + "인 IdType이 존재하지 않습니다."));
+            TraitTargetSourceIdType dbTargetSourceIdType = traitTargetSourceIdTypeRepository.findByTraitTarget_IdAndIdType_IdType(
+                    selectedTraitTargetSourceIdType.getTraitTarget().getId(), selectedTraitTargetSourceIdType.getIdType().getIdType())
+                    .map(targetSourceIdType -> traitTarget.updateTraitTargetSourceIdType(targetSourceIdType, selectedTraitTargetSourceIdType, idType))
+                    .orElseGet(() -> traitTargetSourceIdTypeRepository.save(selectedTraitTargetSourceIdType.mapToTargetSourceIdType(traitTarget, idType)));
+            selectedTraitTargetSourceIdTypes.add(dbTargetSourceIdType);
+        }
+        return selectedTraitTargetSourceIdTypes;
     }
 
 //    @Transactional(readOnly = true)
@@ -46,4 +81,5 @@ public class TraitTargetService {
                 .map(TraitTargetOut::from)
                 .orElseThrow(() -> new RuntimeException("Not found " + id));
     }
+
 }

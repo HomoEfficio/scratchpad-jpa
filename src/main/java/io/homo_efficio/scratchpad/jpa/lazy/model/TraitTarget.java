@@ -2,6 +2,7 @@ package io.homo_efficio.scratchpad.jpa.lazy.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -14,7 +15,7 @@ import java.util.List;
  */
 @Entity
 @NoArgsConstructor
-@Getter
+@Getter @Setter
 public class TraitTarget {
 
     @Id
@@ -42,4 +43,18 @@ public class TraitTarget {
     @ElementCollection
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Long> dataSourceIds;
+
+    @OneToMany(mappedBy = "traitTarget")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<TraitTargetSourceIdType> sourceIdTypes;
+
+    public TraitTargetSourceIdType updateTraitTargetSourceIdType(TraitTargetSourceIdType dbTraitTargetSourceIdType,
+                                                                 TraitTargetSourceIdType selectedTraitTargetSourceIdType, IdType idType) {
+        if (selectedTraitTargetSourceIdType == null)
+            throw new IllegalArgumentException("traitTargetSourceIdTypeDto 는 null 일 수 없습니다.");
+
+        // Target은 변경 불가이므로 setTarget() 안함
+        dbTraitTargetSourceIdType.setIdType(idType);
+        return dbTraitTargetSourceIdType;
+    }
 }

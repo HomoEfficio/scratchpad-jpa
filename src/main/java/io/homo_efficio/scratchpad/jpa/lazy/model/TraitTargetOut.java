@@ -20,6 +20,7 @@ public class TraitTargetOut {
     private final ResourceGroup resourceGroup;
 //    private final Set<Long> resources;
     private final List<Long> dataSourceIds;
+    private final List<TraitTargetSourceIdType> traitTargetSourceIdTypes;
 
     public static TraitTargetOut from(TraitTarget traitTarget) {
         return new TraitTargetOut(
@@ -28,7 +29,8 @@ public class TraitTargetOut {
 //                container.getContainee1s(),
                 traitTarget.getResourceGroup(),
 //                container.getResources()
-                traitTarget.getDataSourceIds()
+                traitTarget.getDataSourceIds(),
+                traitTarget.getSourceIdTypes()
         );
     }
 }
