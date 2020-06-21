@@ -15,7 +15,7 @@ import javax.persistence.Id;
 @Entity
 @NoArgsConstructor
 @Getter
-public class Containee1 {
+public class Site {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

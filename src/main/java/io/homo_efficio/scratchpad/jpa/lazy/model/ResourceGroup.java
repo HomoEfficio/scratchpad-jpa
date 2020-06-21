@@ -6,6 +6,8 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -15,7 +17,7 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @Getter
-public class Containee2 {
+public class ResourceGroup implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +25,10 @@ public class Containee2 {
 
     private String name;
 
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    private Site site;
+
     @ElementCollection(fetch = FetchType.LAZY)
     @LazyCollection(LazyCollectionOption.TRUE)
-    private Set<Long> resources;
+    private Set<Long> resources = new HashSet<>();
 }

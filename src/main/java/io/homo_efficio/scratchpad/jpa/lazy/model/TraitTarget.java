@@ -7,7 +7,6 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author homo.efficio@gmail.com
@@ -16,7 +15,7 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @Getter
-public class Container {
+public class TraitTarget {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,15 +23,23 @@ public class Container {
 
     private String name;
 
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_SITE"))
+    private Site site;
+
 //    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 //    @JoinColumn(name = "container_id")
 //    private List<Containee1> containee1s;
 
 //    @OneToOne(cascade = CascadeType.PERSIST)
-////    @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-//    private Containee2 containee2;
+    @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private ResourceGroup resourceGroup;
 
-    @ElementCollection(fetch = FetchType.LAZY)
-    @LazyCollection(LazyCollectionOption.TRUE)
-    private Set<Long> resources;
+//    @ElementCollection(fetch = FetchType.LAZY)
+//    @LazyCollection(LazyCollectionOption.TRUE)
+//    private Set<Long> resources;
+
+    @ElementCollection
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Long> dataSourceIds;
 }
