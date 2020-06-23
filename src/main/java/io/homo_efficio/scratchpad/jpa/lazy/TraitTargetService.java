@@ -8,6 +8,7 @@ import io.homo_efficio.scratchpad.jpa.lazy.repository.IdTypeRepository;
 import io.homo_efficio.scratchpad.jpa.lazy.repository.TraitTargetRepository;
 import io.homo_efficio.scratchpad.jpa.lazy.repository.TraitTargetSourceIdTypeRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -78,7 +79,13 @@ public class TraitTargetService {
 //        return containerOut;
 
         return traitTargetRepository.findById(id)
-                .map(TraitTargetOut::from)
+                .map(TraitTargetOut::from)  // error
+//                .map(traitTarget -> {
+//                    Hibernate.initialize(traitTarget);  // error
+//                    Hibernate.initialize(traitTarget.getResourceGroup());  // error
+//                    Hibernate.initialize(traitTarget.getResourceGroup().getResources());  // 성공
+//                    return TraitTargetOut.from(traitTarget);
+//                })
                 .orElseThrow(() -> new RuntimeException("Not found " + id));
     }
 

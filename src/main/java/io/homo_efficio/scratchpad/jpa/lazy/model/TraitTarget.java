@@ -32,8 +32,8 @@ public class TraitTarget {
 //    @JoinColumn(name = "container_id")
 //    private List<Containee1> containee1s;
 
-//    @OneToOne(cascade = CascadeType.PERSIST)
-    @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.PERSIST)
+//    @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private ResourceGroup resourceGroup;
 
 //    @ElementCollection(fetch = FetchType.LAZY)
