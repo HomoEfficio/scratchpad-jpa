@@ -1,0 +1,34 @@
+curl --request POST \
+  --url http://localhost:8080/trait-targets \
+  --header 'content-type: application/json' \
+  --data '{
+	"name": "traitTarget1",
+	"site": {
+		"name": "site1"
+	},
+	"resourceGroup": {
+		"name": "resourceGroup1",
+		"site": {
+			"name": "site1"
+		},
+		"resources": [1, 2, 3]
+	},
+	"dataSourceIds": [11, 22, 33],
+	"sourceIdTypes": [
+		{
+			"traitTarget": {
+				"id": 1
+			},
+			"idType": {
+				"idType": "gaid",
+				"name": "gaitName",
+				"orderSeq": 1
+			}
+		}
+	]
+}
+'
+
+curl --request GET \
+  --url http://localhost:8080/trait-targets/1 \
+  --header 'content-type: application/json'
